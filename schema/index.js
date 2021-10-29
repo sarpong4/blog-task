@@ -1,6 +1,6 @@
 const { SchemaComposer } = require("graphql-compose");
 
-const db = require("utils.db");
+const db = require("../utils/db");
 
 const schemaComposer = new SchemaComposer();
 

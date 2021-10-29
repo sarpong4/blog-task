@@ -1,7 +1,7 @@
-const mongoose, {Schema} = require('mongoose')
+const mongoose = require('mongoose')
 const {composeWithMongoose} = require('graphql-compose-mongoose')
 
-export const commentSchema = new Schema(
+const commentSchema = new mongoose.Schema(
     {
         postedBy: {
             type: String,
