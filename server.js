@@ -1,17 +1,37 @@
+require("dotenv").config();
+const express = require("express");
 const { ApolloServer } = require("apollo-server");
-const typeDefs = require("./schema");
-const resolvers = require("./resolvers");
-// const {models, db} = require('./db')
+const mongoose = require("mongoose");
+
+require("./utils/db");
+const schema = require("./schema");
+
+const app = express();
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-//   context() {
-//     return "Hello";
-//   },
+  schema,
+  cors: true,
+  playground: process.env.NODE_ENV === "development" ? true : false,
+  introspection: true,
+  tracing: true,
+  path: "/",
 });
 
+server.applyMiddleware({
+  app,
+  path: "/",
+  cors: true,
+  onHealthCheck: () => {
+    // eslint-disable-next-line no-undef
+    new Promise((resolve, reject) => {
+      if (mongoose.connection.readyState > 0) {
+        resolve();
+      }
+      reject();
+    });
+  },
+});
 
-server.listen().then(({url}) => {
-    console.log(`🚀 Server ready at ${url}`)
-})
+app.listen({ port: process.env.PORT  || 4000}, () => {
+  console.log(`🚀 Server on port ${port}`)
+});
