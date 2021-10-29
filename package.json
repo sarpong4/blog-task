@@ -1,0 +1,30 @@
+{
+  "name": "blog-task",
+  "version": "1.0.0",
+  "description": "\"A blog web API written in GraphQL with Node.js\"",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarpong4/blog-task.git"
+  },
+  "keywords": [
+    "GraphQL",
+    "Node.js"
+  ],
+  "author": "Onesimus Sarpong Wiafe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sarpong4/blog-task/issues"
+  },
+  "homepage": "https://github.com/sarpong4/blog-task#readme",
+  "dependencies": {
+    "apollo-server": "^3.4.0",
+    "dotenv": "^10.0.0",
+    "graphql": "^16.0.0",
+    "graphql-tag": "^2.12.5",
+    "mongoose": "^6.0.12"
+  }
+}
