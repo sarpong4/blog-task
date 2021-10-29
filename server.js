@@ -17,21 +17,29 @@ const server = new ApolloServer({
   path: "/",
 });
 
-server.applyMiddleware({
-  app,
-  path: "/",
-  cors: true,
-  onHealthCheck: () => {
-    // eslint-disable-next-line no-undef
-    new Promise((resolve, reject) => {
-      if (mongoose.connection.readyState > 0) {
-        resolve();
-      }
-      reject();
-    });
-  },
-});
+// app.use('/', server.start())
 
-app.listen({ port: process.env.PORT  || 4000}, () => {
-  console.log(`🚀 Server on port ${port}`)
-});
+// async () => {
+//   await server.start();
+//   server.applyMiddleware({
+//     app,
+//     path: "/",
+//     cors: true,
+//     onHealthCheck: () => {
+//       // eslint-disable-next-line no-undef
+//       new Promise((resolve, reject) => {
+//         if (mongoose.connection.readyState > 0) {
+//           resolve();
+//         }
+//         reject();
+//       });
+//     },
+//   });
+// };
+
+const port = process.env.PORT || 4000;
+server.listen()
+
+// app.listen({ port: process.env.PORT || 4000 }, () => {
+//   console.log(`🚀 Server on port ${process.env.PORT || 4000}`);
+// });
