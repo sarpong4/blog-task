@@ -3,7 +3,7 @@ const express = require("express");
 const { ApolloServer } = require("apollo-server");
 const mongoose = require("mongoose");
 
-require("./utils/db");
+require("./db");
 const schema = require("./schema");
 
 const app = express();
@@ -11,10 +11,6 @@ const app = express();
 const server = new ApolloServer({
   schema,
   cors: true,
-  playground: process.env.NODE_ENV === "development" ? true : false,
-  introspection: true,
-  tracing: true,
-  path: "/",
 });
 
 // app.use('/', server.start())
