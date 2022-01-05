@@ -1,0 +1,35 @@
+type User {
+  _id: ID!
+  email: String!
+  Name: String!
+  username: String!
+  apiKey: String!sig
+}
+
+type Query {
+  user: User!
+}
+
+input NewUserInput {
+  Name: String!
+  email: String!
+  username: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  # Email is unique to each user
+  email: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+type Mutation {
+  signup(input: NewUserInput): User!
+  login(input: LoginInput): User!
+  updateUSer(input: UpdateUserInput): User!
+  deleteUser(input: UpdateUserInput): User!
+}

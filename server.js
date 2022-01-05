@@ -1,41 +1,30 @@
-require("dotenv").config();
-const express = require("express");
 const { ApolloServer } = require("apollo-server");
-const mongoose = require("mongoose");
+const connectDB = require("./src/db");
+const { merge } = require("lodash");
+const { authenticate } = require("./src/utis/auth");
+const user = require("./src/types/user/user.resolvers");
+const loadTypeSchema = require("./src/utils/schema");
 
-require("./db");
-const schema = require("./schema");
+const port = process.env.PORT || 8000;
 
-const app = express();
+const types = ["user", "blog", "comment", "likes", "bookmarks"];
 
-const server = new ApolloServer({
-  schema,
-  cors: true,
-});
+const start = async () => {
+  const Schemas = await Promise.all(types.map(loadTypeSchema));
 
-// app.use('/', server.start())
+  const server = new ApolloServer({
+    typeDefs: [Schemas],
+    resolvers: merge(user),
+    async context({ req }) {
+      const user = await authenticate(req);
+      return { user };
+    },
+  });
 
-// async () => {
-//   await server.start();
-//   server.applyMiddleware({
-//     app,
-//     path: "/",
-//     cors: true,
-//     onHealthCheck: () => {
-//       // eslint-disable-next-line no-undef
-//       new Promise((resolve, reject) => {
-//         if (mongoose.connection.readyState > 0) {
-//           resolve();
-//         }
-//         reject();
-//       });
-//     },
-//   });
-// };
+  await connectDB();
+  const { url } = await server.listen({ port: port });
 
-const port = process.env.PORT || 4000;
-server.listen()
+  console.log(`GQL server ready at ${url}`);
+};
 
-// app.listen({ port: process.env.PORT || 4000 }, () => {
-//   console.log(`🚀 Server on port ${process.env.PORT || 4000}`);
-// });
+start();
