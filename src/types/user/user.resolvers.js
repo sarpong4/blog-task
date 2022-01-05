@@ -31,7 +31,9 @@ const updateUser = (_, args, ctx) => {
     throw new AuthenticationError();
   }
 
-  return User.findByIdAndUpdate(ctx.user._id, args.input, { new: true })
+  return User.findByIdAndUpdate({ _id: ctx.user._id }, args.input, {
+    new: true,
+  })
     .select("-password")
     .lean()
     .exec();
