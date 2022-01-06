@@ -3,11 +3,12 @@ type User {
   email: String!
   Name: String!
   username: String!
-  apiKey: String!sig
+  apiKey: String!
 }
 
 type Query {
-  user: User!
+  me: User!
+  user(id: ID!): User!
 }
 
 input NewUserInput {
@@ -19,7 +20,8 @@ input NewUserInput {
 
 input UpdateUserInput {
   # Email is unique to each user
-  email: String!
+  Name: String
+  password: String
 }
 
 input LoginInput {
@@ -30,6 +32,6 @@ input LoginInput {
 type Mutation {
   signup(input: NewUserInput): User!
   login(input: LoginInput): User!
-  updateUSer(input: UpdateUserInput): User!
-  deleteUser(input: UpdateUserInput): User!
+  updateUser(input: UpdateUserInput): User!
+  deleteUser: User!
 }

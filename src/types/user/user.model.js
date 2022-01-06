@@ -23,7 +23,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: false,
+      unique: true,
     },
     apiKey: {
       // Got this from frontend Masters course...
@@ -36,13 +36,15 @@ const userSchema = new Schema(
 );
 
 // Encrypt password before saving new user/modifying.
-userSchema.pre("save", (next) => {
-  if (!this.isModified) {
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
 
-  bcrypt.hash(this.password, 10, (err, hash) => {
-    if (err) return next(err);
+  bcrypt.hash(this.password, 8, (err, hash) => {
+    if (err) {
+      return next(err);
+    }
 
     this.password = hash;
     next();
@@ -50,10 +52,17 @@ userSchema.pre("save", (next) => {
 });
 
 // Validate Password
-userSchema.methods.checkPassword = async (password) => {
-  const pwdHash = this.password;
-  const match = await bcrypt.compare(password, pwdHash);
-  return match;
+userSchema.methods.checkPassword = function (password) {
+  const passwordHash = this.password;
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(password, passwordHash, (err, same) => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(same);
+    });
+  });
 };
 
 const User = model("User", userSchema);

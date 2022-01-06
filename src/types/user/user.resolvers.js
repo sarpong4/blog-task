@@ -1,46 +1,59 @@
 const User = require("./user.model");
 const { AuthenticationError } = require("apollo-server");
-const { newApikey } = require("../../utils/auth");
+const { newApiKey } = require("../../utils/auth");
 
-const user = (_, args, ctx) => {
+const me = (_, args, ctx) => {
   if (!ctx.user) {
     throw new AuthenticationError();
   }
   return ctx.user;
 };
 
-const signup = (_, args) => {
-  return User.create({ ...args.input, apiKey: newApikey() });
+const user = (_, args, ctx) => {
+  if (!ctx.user) {
+    throw new AuthenticationError("Not Logged In");
+  } else {
+    return User.findById({ _id: args.id }).select("-password").lean().exec();
+  }
 };
 
-const login = async (_, args) => {
-  const user = await User.findOne({ username: args.input.username });
+const signup = (_, args) => {
+  return User.create({ ...args.input, apiKey: newApiKey() });
+};
 
-  if (!user) {
-    throw new AuthenticationError();
-  }
+const login = async (_, args, ctx) => {
+  if (!ctx.user) {
+    const user = await User.findOne({ username: args.input.username });
 
-  const pwdMatch = await user.checkPassword(args.input.password);
-  if (!pwdMatch) {
-    throw new AuthenticationError();
+    if (!user) {
+      throw new AuthenticationError("User not Found");
+    }
+
+    const pwdMatch = await user.checkPassword(args.input.password);
+    if (!pwdMatch) {
+      throw new AuthenticationError("Invalid Password");
+    }
+    return user;
+  } else {
+    throw new AuthenticationError("Already Logged In");
   }
-  return user.select("-password").lean().exec();
 };
 const updateUser = (_, args, ctx) => {
   if (!ctx.user) {
-    throw new AuthenticationError();
+    throw new AuthenticationError("Not Logged in or User Does not Exist!");
   }
 
-  return User.findByIdAndUpdate({ _id: ctx.user._id }, args.input, {
+  return User.findByIdAndUpdate(ctx.user._id, args.input, {
     new: true,
+    runValidators: true,
   })
     .select("-password")
     .lean()
     .exec();
 };
-const deleteUser = (_, args, ctx) => {
+const deleteUser = (_, __, ctx) => {
   if (!ctx.user) {
-    throw new AuthenticationError();
+    throw new AuthenticationError("Not Logged In or User Does not Exist");
   }
 
   return User.findByIdAndRemove(ctx.user._id).select("-password").lean().exec();
@@ -48,6 +61,7 @@ const deleteUser = (_, args, ctx) => {
 
 module.exports = {
   Query: {
+    me,
     user,
   },
   Mutation: {

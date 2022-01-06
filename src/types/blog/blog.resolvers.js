@@ -1,5 +1,5 @@
 const Blog = require("./blog.model");
-const User = require("../user/user.model");
+// const User = require("../user/user.model");
 const { AuthenticationError } = require("apollo-server");
 
 const blog = (_, args, ctx) => {

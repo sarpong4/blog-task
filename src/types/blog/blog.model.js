@@ -21,7 +21,7 @@ const blogSchema = new Schema(
         "Arts",
         "Education",
         "Movies",
-        "TV Shows",
+        "TV_Shows",
         "Sports",
         "Food",
       ],

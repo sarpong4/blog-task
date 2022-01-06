@@ -6,8 +6,7 @@ enum Category {
   Arts
   Education
   Movies
-  TV
-  Shows
+  TV_Shows
   Sports
   Food
 }
@@ -21,28 +20,30 @@ type Blog {
   category: Category!
 }
 
-input NewBlogInput{
-    title: String!
-    content: String!
-    summary String
-    category: Category!
+input NewBlogInput {
+  title: String!
+  content: String!
+  summary: String
+  category: Category!
 }
-input UpdateBlogInput{
-    title: String
-    content: String
-    summary String
-    category: Category
+input UpdateBlogInput {
+  title: String
+  content: String
+  summary: String
+  category: Category
 }
 
 # As there are other queries and mutation files
-extend type Query {
+type Query {
   blog(id: ID!): Blog!
-  blogsByAuthor(author: User!): [Blog]!
-  blogsByDate(writtenOn: Date): [Blog]!
+  blogsByAuthor(author: ID!): [Blog]!
+  blogsByDate(writtenOn: Date!): [Blog]!
 }
 
-extend type Mutation {
+type Mutation {
   newBlog(input: NewBlogInput!): Blog!
   updateBlog(id: ID!, input: UpdateBlogInput): Blog!
   removeBlog(id: ID!): Blog!
 }
+
+scalar Date
