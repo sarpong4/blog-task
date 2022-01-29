@@ -1,0 +1,14 @@
+type Bookmark {
+  id: ID!
+  blog: Blog!
+  createdBy: User!
+}
+
+type Query {
+  bookmark(id: ID!): Bookmark!
+}
+
+type Mutation {
+  newBookmark(id: ID!): Bookmark!
+  removeBookmark(id: ID!): Bookmark!
+}

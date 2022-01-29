@@ -5,10 +5,11 @@ const { authenticate } = require("./src/utils/auth");
 const user = require("./src/types/user/user.resolvers");
 const loadTypeSchema = require("./src/utils/schema");
 const blog = require("./src/types/blog/blog.resolvers");
+const bookmark = require("./src/types/bookmark/bookmark.resolvers");
 
 const port = process.env.PORT || 8000;
 
-const types = ["blog", "user"]; //, "comment", "likes", "bookmarks"
+const types = ["bookmark", "blog", "user"]; //, "comment", "likes", "bookmarks"
 
 const start = async () => {
   const rootSchema = ``;
@@ -16,7 +17,7 @@ const start = async () => {
 
   const server = new ApolloServer({
     typeDefs: [rootSchema, ...Schemas],
-    resolvers: merge({}, blog, user),
+    resolvers: merge({}, bookmark, blog, user),
     async context({ req }) {
       // use the authenticate function from utils to auth req,
       const user = await authenticate(req);
